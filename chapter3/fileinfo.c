@@ -3,6 +3,7 @@
 #include "sys/stat.h"
 #include "pwd.h"
 #include "grp.h"
+#include "dirent.h"
 
 void showtime(long timeval)
 {
@@ -73,17 +74,37 @@ void show_stat_info(char *fname, struct stat *buf)
 
 }
 
-int main(int argc, char *argv[])
+void dostat(char *filename)
 {
 	struct stat info;
 	
-	if(argc > 1)
-		if(stat(argv[1], &info) != -1){
-			show_stat_info(argv[1], &info);
-			return 0;
-		}
-		else
-		 	perror(argv[1]);
+	if(stat(filename, &info) == -1)
+		perror(filename);
+	else
+		show_stat_info(filename, &info);
+}
 
-	return 1;
+void do_ls(char dirname[])
+{
+	DIR *dir_ptr;
+	struct dirent *direntp;
+
+	if((dir_ptr = opendir(dirname)) == NULL)
+		fprintf(stderr, "ls1:cannot open %s\n", dirname);
+	else{
+		while((direntp = readdir(dir_ptr)) != NULL)
+			dostat(direntp->d_name);
+		close(dir_ptr);
+	}
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc == 1)
+		do_ls(".");
+	else
+		while(--argc){
+			printf("%s:\n", *++argv);
+			do_ls(*argv);
+		}
 }
