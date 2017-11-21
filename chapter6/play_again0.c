@@ -13,9 +13,10 @@ int get_response(char *question)
 			case 'n':
 			case 'N':
 			case EOF: return 1;
-			default : 
+/*			default : 
 				  printf("\ncan't understand %c, ", input);
 				  printf("please type y or n \n");
+*/
 		}
 	}
 }
@@ -35,6 +36,7 @@ void set_crmode()
 	struct termios ttystate;
 	tcgetattr(0, &ttystate);		//获取标准输入tty的属性
 	ttystate.c_lflag    &= ~ICANON;
+	ttystate.c_lflag    &= ~ECHO;
 	ttystate.c_cc[VMIN]  = 1;		//告诉程序一次可以读取多少字符
 	tcsetattr(0, TCSANOW, &ttystate);
 }
