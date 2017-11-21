@@ -33,9 +33,9 @@ int tty_mode(int how)
 void set_crmode()
 {
 	struct termios ttystate;
-	tcgetattr(0, &ttystate);
+	tcgetattr(0, &ttystate);		//获取标准输入tty的属性
 	ttystate.c_lflag    &= ~ICANON;
-	ttystate.c_cc[VMIN]  = 1;
+	ttystate.c_cc[VMIN]  = 1;		//告诉程序一次可以读取多少字符
 	tcsetattr(0, TCSANOW, &ttystate);
 }
 
