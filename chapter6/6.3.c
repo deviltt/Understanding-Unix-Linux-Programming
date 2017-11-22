@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "termios.h"
+#include "fcntl.h"
 
 #define TIMEOUT 6
 #define ASK "will you take money?"
@@ -33,11 +34,27 @@ int get_response(char *ask)
 	}
 }
 
+void set_mode(int how)
+{
+	static struct termios original_mode;
+	static int original_flag;
+	if(how == 0){
+		tcgetattr(0, &original_mode); 		//获取标准输入的tty的驱动信息
+		original_flag = fcntl(0, F_GETFL);	//获取标准输入的文件标志
+	}
+	else{
+		tcsetattr(0, TCSANOW, &original_mode);
+		fcntl(0, F_SETFL, original_flag);
+	}
+}
+
 int main()
 {
 	int response;
+	set_mode(0);			//保存当前的状态信息，因为主程序会改变状态信息
 	set_no_echo(TIMEOUT);
 	response = get_response(ASK);
+	set_mode(1);			//恢复主程序运行之前的状态信息
 	putchar('\n');
 	return response;
 }
