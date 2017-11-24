@@ -40,7 +40,7 @@ int main()
 			arglist[numargs++] = makestring(argbuf);
 		else{
 			if(numargs > 0){
-				arglist[numargs] == NULL;
+				arglist[numargs] = NULL;
 				execute(arglist);
 				numargs = 0;
 			}
