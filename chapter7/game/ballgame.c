@@ -11,8 +11,8 @@
 #define Y_INIT 10
 #define X_INIT 10
 #define BLANK ' '
-#define X_TTM 2
-#define Y_TTM 2
+#define X_TTM 50
+#define Y_TTM 50
 
 struct ppball{
 	int y_pos, x_pos,
@@ -124,10 +124,10 @@ void main()
 
 	set_up();
 	while((c = getchar()) != 'Q'){
-		if(c == 'f')	  the_ball.x_ttm--;
-		else if(c == 's') the_ball.x_ttm++;
-		else if(c == 'F') the_ball.y_ttm--;
-		else if(c == 'S') the_ball.y_ttm++;
+		if(c == '1')	  the_ball.x_ttm = the_ball.y_ttm = 2 ;
+		else if(c == '2') the_ball.x_ttm = the_ball.y_ttm = 25;
+		else if(c == '3') the_ball.y_ttm = the_ball.x_ttm = 50;
+		else if(c == '4') the_ball.y_ttm = the_ball.x_ttm = 100;
 	}
 	set_ticker(0);
 	endwin();
