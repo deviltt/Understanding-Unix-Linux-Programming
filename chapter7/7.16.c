@@ -2,21 +2,25 @@
 #include "curses.h"
 #include "signal.h"
 #include "sys/time.h"
+#include "string.h"
 
 char charset[] = "0123456789";
 
 int dotest(int i)
 {	
-	int digit, c, rv;
+	int waitfor;
+	int c, rv;
 	struct timeval start, done;
-	
-	digit = charset[rand() % strlen(charset)];
+	char digit;
 
+	digit = charset[rand() % strlen(charset)];
+	waitfor = rand() % 10;
+	
 	move(LINES / 2, COLS / 2 - 4);
 	printw("TEST  %2d", i);
 	move(LINES - 1, COLS - 1);
 	refresh();
-	sleep(2);
+	sleep(waitfor);
 	clear();
 	refresh();
 	move(LINES / 2, COLS / 2);
