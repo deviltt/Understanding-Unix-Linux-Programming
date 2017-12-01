@@ -11,7 +11,7 @@ struct arg_set{
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t flag = PTHREAD_COND_INITIALIZER;
 
-struct arg_set *mailbox;
+struct arg_set *mailbox = NULL;
 
 void *count_words(void *a)
 {
@@ -53,13 +53,15 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	
+	pthread_mutex_lock(&lock);
+
 	arg1.fname = argv[1];
 	arg1.count = 0;
 	pthread_create(&t1, NULL, count_words, (void *)&arg1);
 	
-	arg1.fname = argv[1];
-	arg1.count = 0;
-	pthread_create(&t1, NULL, count_words, (void *)&arg1);
+	arg2.fname = argv[2];
+	arg2.count = 0;
+	pthread_create(&t2, NULL, count_words, (void *)&arg2);
 
 	while(reports_in < 2){
 		printf("MAIN: waiting for flag to go up\n");
