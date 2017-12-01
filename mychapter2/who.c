@@ -2,14 +2,26 @@
 #include "utmp.h"
 #include "fcntl.h"
 #include "stdlib.h"
+#include "time.h"
+
+void showtime(long timeval)
+{
+	char *cp;
+	cp = ctime(&timeval);
+
+	printf("%12.12s", cp + 4);
+}
 
 void show_info(struct utmp *utmp_buf)
 {
+	if(utmp_buf->ut_type != USER_PROCESS)
+		return;
 	printf("%-8s", utmp_buf->ut_user);
 	printf(" ");
 	printf("%-8s", utmp_buf->ut_line);
 	printf(" ");
-	printf("%10ld", utmp_buf->ut_time);
+//	printf("%10ld", utmp_buf->ut_time);
+	showtime(utmp_buf->ut_time);
 	printf("\n");
 }
 
