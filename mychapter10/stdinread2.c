@@ -14,12 +14,15 @@ int main()
 		printf("open error");
 		exit(0);
 	}	
-	
+/*	
 	close(0);
 	if((newfd = dup(fd)) != 0){
 		fprintf(stderr, "dup error");
 		exit(1);
 	}
+*/
+	newfd = dup2(fd, 0);
+
 	close(fd);
 	fgets(buf, 100, stdin);	printf("%s", buf);
 	fgets(buf, 100, stdin);	printf("%s", buf);
