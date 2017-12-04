@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	if((pid = fork()) == EOF){
 		oops("fork error", 2);
 	}
-	else if(pid == 0){
+	else if(pid == 0){		//把执行的命令行命令内容写进管道
 		close(pipefd[0]);
 		if(dup2(pipefd[1], 1) == EOF)
 			oops("dup error", 3);
@@ -29,13 +29,11 @@ int main(int argc, char *argv[])
 		oops("execlp", 4);
 	}
 	else{
-		printf("ppp\n");
-		close(pipefd[1]);
+		close(pipefd[1]);	//从管道中读入shell命令所需的内容
 		if(dup2(pipefd[0], 0) == EOF)
 			oops("dup error", 4);
 		close(pipefd[0]);
 		execlp(argv[2], argv[2], NULL);
-		printf("dddd\n");
 		oops("execlp", 5);
 	}
 	return 0;
