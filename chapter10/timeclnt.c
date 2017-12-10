@@ -22,14 +22,15 @@ int main(int argc, char *argv[])
 		oops("socket");
 	
 	bzero(&servadd, sizeof(servadd));
-	hp = gethostbyname(argv[1]);
-	if(hp == NULL)
-		oops(argv[1]);
-	bcopy(hp->h_addr, (struct sockaddr *)&servadd.sin_addr, hp->h_length);
-	servadd.sin_port = htons(atoi(argv[2]));
-
+//	hp = gethostbyname(argv[1]);
+//	if(hp == NULL)
+//		oops(argv[1]);
+//	bcopy(hp->h_addr, (struct sockaddr *)&servadd.sin_addr, hp->h_length);
+	servadd.sin_port = htons(13000);
 	servadd.sin_family = AF_INET;
-	
+	if(inet_pton(AF_INET, argv[1], &servadd.sin_addr) <=0)
+		oops("inet_pton error");	
+
 	if(connect(sock_id, (struct sockaddr *)&servadd, sizeof(servadd)) != 0)
 		oops("connect");
 

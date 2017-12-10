@@ -15,24 +15,25 @@
 int main(int argc, char *argv[])
 {
 	struct sockaddr_in saddr;
-	struct hostent       *hp;
-	char hostname[HOSTLEN];
+//	struct hostent       *hp;
+//	char hostname[HOSTLEN];
 	int sock_id, sock_fd;
 	FILE *sock_fp;
 	char *ctime();
 	time_t thetime;
 // 1.向内核申请一个socket
-	if((sock_id = socket(PF_INET, SOCK_STREAM, 0)) == -1)
+	if((sock_id = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 		oops("socket");
 	
 	bzero((void *)&saddr, sizeof(saddr));
 
-	gethostname(hostname, HOSTLEN);
-	hp = gethostbyname(hostname);
+//	gethostname(hostname, HOSTLEN);
+//	hp = gethostbyname(hostname);
 
-	bcopy((void *)hp->h_addr, (void *)&saddr.sin_addr, hp->h_length);
+//	bcopy((void *)hp->h_addr, (void *)&saddr.sin_addr, hp->h_length);
 	saddr.sin_port = htons(PORTNUM);
 	saddr.sin_family = AF_INET;
+	saddr.sin_addr.s_addr = htonl(INADDR_ANY);
 // 2.绑定地址到socket上，地址包括主机和端口
 	if(bind(sock_id, (struct sockaddr *)&saddr, sizeof(saddr)) != 0)
 		oops("bind");
@@ -40,7 +41,7 @@ int main(int argc, char *argv[])
 	if(listen(sock_id, 1) != 0)
 		oops("listen");
 	while(1){
-		sock_fd = accept(sock_id, NULL, NULL);
+		sock_fd = accept(sock_id, (struct sockaddr *)NULL, NULL);
 		printf("Wow! got a call!\n");
 		if(sock_fd == -1)
 			oops("accept");
