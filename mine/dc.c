@@ -48,8 +48,8 @@ void comefrom_dc(int out[2], int in[2])
 		printf("%d %c %d = %s", num1, *operation, num2, buf);
 	}
 	
-	close(fp_in);
-	close(fp_out);
+	fclose(fp_in);
+	fclose(fp_out);
 }
 
 int main()
@@ -63,10 +63,10 @@ int main()
 	if((pid = fork()) < 0)
 		perror("fork error");
 	else if(pid == 0){
-		from_main(to_dc[2], from_dc[2]);
+		from_main(to_dc, from_dc);
 		execlp("dc", "dc", "-", NULL);
 	}
 
-	comefrom_dc(to_dc[2], from_dc[2]);
+	comefrom_dc(to_dc, from_dc);
 	wait(NULL);
 }
