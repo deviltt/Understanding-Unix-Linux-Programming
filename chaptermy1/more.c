@@ -4,12 +4,12 @@
 #define oops(s) {perror(s); exit(1);}
 #define LINELEN 512
 
-int see_more()
+int see_more(FILE *fp_tty)
 {
 	int c;
 
 	printf("\033[7m more? \033[m");
-	while((c = getchar()) != EOF){
+	while((c = getc(fp_tty)) != EOF){
 		if(c == 'q')
 			return 0;
 		if(c == ' ')
@@ -25,10 +25,13 @@ void do_more(FILE *fp)
 	char line[LINELEN];
 	int num_of_lines = 0;
 	int reply;
+	FILE *fp_tty;
+	
+	fp_tty = fopen("/dev/tty", "r");
 
 	while(fgets(line, LINELEN, fp)){
 		if(num_of_lines == 24){
-			reply = see_more();
+			reply = see_more(fp_tty);
 			if(reply == 0)
 				break;
 			num_of_lines -= reply;
