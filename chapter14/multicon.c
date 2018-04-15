@@ -3,7 +3,7 @@
 #include "curses.h"
 #include "stdlib.h"
 
-#define MAXMSG 10
+#define MAXMSG 30
 #define TUNIT  20000
 
 struct msg{
@@ -20,10 +20,15 @@ int setup(int strnum, char *strings[], struct msg msgs[])	//设置每一个字�
 	int i;
 	int num_msg = (strnum > MAXMSG ? MAXMSG : strnum);
 	for(i = 0; i < strnum; i++){
-		msgs[i].str = strings[i];
-		msgs[i].row = i;
-		msgs[i].delay = 1 + (rand() % 10);
-		msgs[i].dir = ((rand() % 2) ? 1 : -1);
+		msgs[i].str = strings[i];			//字符显示的内容
+		msgs[i].row = i + 10;				//字符所在的行
+
+//		msgs[i].delay = 1 + (rand() % 15);		//让每行的字符的移动延时时间随机
+		msgs[i].delay = 5;
+
+//		msgs[i].dir = ((rand() % 2) ? 1 : -1);
+		msgs[i].dir = 1;				//让每行的字符的移动方向随机
+
 	}
 	initscr();
 	crmode();
@@ -37,7 +42,8 @@ void *movestr(void *arg)
 {
 	struct msg *info = arg;
 	int len = strlen(info->str) + 2;
-	int col = rand() % (COLS - len - 3);
+//	int col = rand() % (COLS - len - 3);
+	int col = 2;		//字符一开始在哪一列显示
 	
 	while(1){
 		usleep(info->delay * TUNIT);
